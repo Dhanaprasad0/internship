@@ -30,7 +30,7 @@ def delete_file(file):
         os.remove(file)
         print("File " + file + " deleted successfully.")
     except :
-        print(f"Error: could not delete file " , file)
+        print(f"Error: could not delete file " + file)
 
 def replace_text(file, find, replace):
     try:
@@ -41,6 +41,43 @@ def replace_text(file, find, replace):
         with open(file, 'w') as f:
             f.write(content)
         print(f"Replaced '{find}' with '{replace}' in '{file}'.")
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+
+def remove_text(file, find):
+    try:
+        with open(file, 'r') as f:
+            content = f.read()
+        content = content.replace(find, '')
+        print(content)
+        with open(file, 'w') as f:
+            f.write(content)
+        print(f"Removed '{find}' from '{file}'.")
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+
+def find_text(file, find):
+    try:
+        with open(file, 'r') as f:
+            content = f.read()
+            print(content)
+        split = ''.join(content.split())
+        index = split.find(find)
+        if index != -1:
+            print(f"'{find}' found at index {index}.")
+        else:
+            print(f"'{find}' not found.")
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+
+def trim_file(file):
+    try:
+        with open(file, 'r') as f:
+            content = f.read()
+        trimmed_content = content.strip()
+        print(f"Trimmed file '{file}' is successfully.")
+        print(f"Trimmed content:\n'{trimmed_content}'")
+        # return trimmed_content
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
 
@@ -129,6 +166,17 @@ def main():
     parser_replace.add_argument('find', help='Text to find')
     parser_replace.add_argument('replace', help='Text to replace with')
 
+    parser_remove = subparsers.add_parser('remove', help='Find and remove text')
+    parser_remove.add_argument('file', help='File to process')
+    parser_remove.add_argument('find', help='Text to find')
+
+    parser_find = subparsers.add_parser('find', help='Find the text')
+    parser_find.add_argument('file', help='File to process')
+    parser_find.add_argument('find', help='Text to find')
+
+    parser_trim = subparsers.add_parser('trim', help='Trim  the file content')
+    parser_trim.add_argument('file', help='File to process')
+
     parser_case = subparsers.add_parser('case', help='Convert text case')
     parser_case.add_argument('file', help='File to process')
     parser_case.add_argument('case', choices=['upper', 'lower'], help='Case to convert to')
@@ -158,6 +206,12 @@ def main():
         delete_file(args.file)
     elif args.command == 'replace':
         replace_text(args.file, args.find, args.replace)
+    elif args.command == 'remove':
+        remove_text(args.file, args.find)
+    elif args.command == 'find':
+        find_text(args.file, args.find)
+    elif args.command == 'trim':
+        trim_file(args.file)
     elif args.command == 'case':
         convert_case(args.file, args.case)
     elif args.command == 'count':
