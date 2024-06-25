@@ -75,7 +75,7 @@ def trim_file(file):
         with open(file, 'r') as f:
             content = f.read()
         trimmed_content = content.strip()
-        print(f"Trimmed file '{file}' is successfully.")
+        print(f"Trimmed '{file}' is successfully.")
         print(f"Trimmed content:\n'{trimmed_content}'")
         # return trimmed_content
     except FileNotFoundError:
