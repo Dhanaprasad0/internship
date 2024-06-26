@@ -89,6 +89,8 @@ def convert_case(file, case):
             content = content.upper()
         elif case == 'lower':
             content = content.lower()
+        elif case == 'swapcase':
+            content = content.swapcase()
         print(content)
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
@@ -136,10 +138,52 @@ def append_string_to_file(file, append):
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
 
+
+
+def decompress_file(file, output):
+    try:
+        with zipfile.ZipFile(file, 'r') as zipf:
+            zipf.extractall(output)
+        print(f"File '{file}' decompressed into directory '{output}'")
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def list_contents(file):
+    try:
+        with zipfile.ZipFile(file, 'r') as zipf:
+            contents = zipf.namelist()
+        print(f"Contents of '{file}':")
+        for item in contents:
+            print(item)
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def add_to_zip(file, append):
+    if os.path.exists(append):
+        print(f"File '{append}' already exists. Skipping creation.")
+        return
+    try:
+        with zipfile.ZipFile(file, 'a') as zipf:
+            zipf.write(append, os.path.basename(append))
+        print(f"File '{file}' added to '{append}'")
+    except FileNotFoundError:
+        print(f"Error: The file '{zip_file}' or '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def compress_file(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
     try:
         with zipfile.ZipFile(output, 'w') as zipf:
-            zipf.write(file, os.path.basename(file))
+            for file in file:
+                if os.path.isfile(file):
+                    zipf.write(file, os.path.basename(file))
         print(f"File '{file}' compressed into '{output}'")
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
@@ -147,84 +191,113 @@ def compress_file(file, output):
         print(f"An error occurred: {e}")
 
 def main():
-    parser = argparse.ArgumentParser(description='Text Manipulation Utility')
+    parser = argparse.ArgumentParser(description='Text Manipulation And File Compression ` Utility')
     subparsers = parser.add_subparsers(dest='command')
 
-    parser_create = subparsers.add_parser('create', help='Create the file')
+    parser_text = subparsers.add_parser('text', help='Text manipulation commands')
+    text_subparsers = parser_text.add_subparsers(dest='subcommand')
+
+    parser_create = text_subparsers.add_parser('create', help='Create the file')
     parser_create.add_argument('file', help='File to process')
     parser_create.add_argument('text', help='Create of new file')
 
-    parser_rename = subparsers.add_parser('rename', help='Rename the file')
+    parser_rename = text_subparsers.add_parser('rename', help='Rename the file')
     parser_rename.add_argument('file', help='File to process')
     parser_rename.add_argument('renamefile', help='file name to rename file')
 
-    parser_delete = subparsers.add_parser('delete', help='Delete the file')
+    parser_delete = text_subparsers.add_parser('delete', help='Delete the file')
     parser_delete.add_argument('file', help='File to process')
 
-    parser_replace = subparsers.add_parser('replace', help='Find and replace text')
+    parser_replace = text_subparsers.add_parser('replace', help='Find and replace text')
     parser_replace.add_argument('file', help='File to process')
     parser_replace.add_argument('find', help='Text to find')
     parser_replace.add_argument('replace', help='Text to replace with')
 
-    parser_remove = subparsers.add_parser('remove', help='Find and remove text')
+    parser_remove = text_subparsers.add_parser('remove', help='Find and remove text')
     parser_remove.add_argument('file', help='File to process')
     parser_remove.add_argument('find', help='Text to find')
 
-    parser_find = subparsers.add_parser('find', help='Find the text')
+    parser_find = text_subparsers.add_parser('find', help='Find the text')
     parser_find.add_argument('file', help='File to process')
     parser_find.add_argument('find', help='Text to find')
 
-    parser_trim = subparsers.add_parser('trim', help='Trim  the file content')
+    parser_trim = text_subparsers.add_parser('trim', help='Trim  the file content')
     parser_trim.add_argument('file', help='File to process')
 
-    parser_case = subparsers.add_parser('case', help='Convert text case')
+    parser_case = text_subparsers.add_parser('case', help='Convert text case')
     parser_case.add_argument('file', help='File to process')
-    parser_case.add_argument('case', choices=['upper', 'lower'], help='Case to convert to')
+    parser_case.add_argument('case', choices=['upper', 'lower', 'swapcase' ], help='Case to convert to')
 
-    parser_count = subparsers.add_parser('count', help='Count occurrences of a word')
+    parser_count = text_subparsers.add_parser('count', help='Count occurrences of a word')
     parser_count.add_argument('file', help='File to process')
     parser_count.add_argument('--word', help='Word to count')
 
-    parser_reverse = subparsers.add_parser('reverse', help='Reverse occurrences of a word')
+    parser_reverse = text_subparsers.add_parser('reverse', help='Reverse occurrences of a word')
     parser_reverse.add_argument('file', help='File to process')
 
-    parser_append = subparsers.add_parser('append', help='append to the file')
+    parser_append = text_subparsers.add_parser('append', help='append to the file')
     parser_append.add_argument('file', help='File to process')
     parser_append.add_argument('append', help='Text to append')
 
-    parser_compress = subparsers.add_parser('compress', help='Compress a file into a ZIP archive')
-    parser_compress.add_argument('file', help='File to compress')
-    parser_compress.add_argument('output', help='Output ZIP file name')
+    parser_compress = subparsers.add_parser('compress', help='File compression commands')
+    compress_subparsers = parser_compress.add_subparsers(dest='subcommand',required=True)
+
+    parser_compress_file = compress_subparsers.add_parser('file_compress', help='Compress a file into a ZIP archive')
+    parser_compress_file.add_argument('file', nargs='+' , help='File to compress')
+    parser_compress_file.add_argument('output', help='Output ZIP file name')
+
+    parser_decompress = compress_subparsers.add_parser('file_decompress', help='Decompress a ZIP file')
+    parser_decompress.add_argument('file' , help='ZIP file to decompress')
+    parser_decompress.add_argument('output', help='Directory to extract  ,files to')
+
+    parser_list = compress_subparsers.add_parser('list_file', help='List contents of a ZIP file')
+    parser_list.add_argument('file', help='ZIP file to list contents of')
+
+    parser_add = compress_subparsers.add_parser('add_file', help='Add a file to an existing ZIP archive')
+    parser_add.add_argument('file', help='ZIP file to add to')
+    parser_add.add_argument('append', help='File to add to the ZIP archive')
 
     args = parser.parse_args()
 
-    if args.command == 'create':
-        create_file(args.file,args.text)
-    elif args.command == 'rename':
-        rename_file(args.file,args.renamefile)
-    elif args.command == 'delete':
-        delete_file(args.file)
-    elif args.command == 'replace':
-        replace_text(args.file, args.find, args.replace)
-    elif args.command == 'remove':
-        remove_text(args.file, args.find)
-    elif args.command == 'find':
-        find_text(args.file, args.find)
-    elif args.command == 'trim':
-        trim_file(args.file)
-    elif args.command == 'case':
-        convert_case(args.file, args.case)
-    elif args.command == 'count':
-        if args.word:
-            count_word_in_file(args.file, args.word)
+    if args.command == 'text':
+        if args.subcommand == 'create':
+            create_file(args.file, args.text)
+        elif args.subcommand == 'rename':
+            rename_file(args.file, args.renamefile)
+        elif args.subcommand == 'delete':
+            delete_file(args.file)
+        elif args.subcommand == 'replace':
+            replace_text(args.file, args.find, args.replace)
+        elif args.subcommand == 'remove':
+            remove_text(args.file, args.find)
+        elif args.subcommand == 'find':
+            find_text(args.file, args.find)
+        elif args.subcommand == 'trim':
+            trim_file(args.file)
+        elif args.subcommand == 'case':
+            convert_case(args.file, args.case)
+        elif args.subcommand == 'count':
+            if args.word:
+                count_word_in_file(args.file, args.word)
+            else:
+                count_all_words_in_file(args.file)
+        elif args.subcommand == 'reverse':
+            reverse_file_content(args.file)
+        elif args.subcommand == 'append':
+            append_string_to_file(args.file, args.append)
         else:
-            count_all_words_in_file(args.file)
-    elif args.command == 'append':
-        append_string_to_file(args.file,args.append)
+            parser.print_help()
     elif args.command == 'compress':
-        compress_file(args.file, args.output)
-    elif args.command == 'reverse':
-        reverse_file_content(args.file)
+        if args.subcommand == 'file_compress':
+            compress_file(args.file, args.output)
+        elif args.subcommand == 'file_decompress':
+            decompress_file(args.file, args.output)
+        elif args.subcommand == 'list_file':
+            list_contents(args.file)
+        elif args.subcommand == 'add_file':
+            add_to_zip(args.file, args.append)
+        else:
+            parser.print_help()
     else:
         parser.print_help()
 
