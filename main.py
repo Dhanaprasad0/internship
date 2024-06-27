@@ -3,6 +3,11 @@ import os
 import zipfile
 import re
 from collections import Counter
+import lzma
+import shutil
+import bz2
+import tarfile
+import gzip
 
 def create_file(file,text):
     if os.path.exists(file):
@@ -140,7 +145,10 @@ def append_string_to_file(file, append):
 
 
 
-def decompress_file(file, output):
+def decompress_file_zip(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
     try:
         with zipfile.ZipFile(file, 'r') as zipf:
             zipf.extractall(output)
@@ -163,6 +171,9 @@ def list_contents(file):
         print(f"An error occurred: {e}")
 
 def add_to_zip(file, append):
+    if os.path.exists(file):
+        print(f"File '{file}' already exists. Skipping creation.")
+        return
     if os.path.exists(append):
         print(f"File '{append}' already exists. Skipping creation.")
         return
@@ -175,7 +186,7 @@ def add_to_zip(file, append):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def compress_file(file, output):
+'''def compress_file_zip(file, output):
     if os.path.exists(output):
         print(f"File '{output}' already exists. Skipping creation.")
         return
@@ -188,8 +199,130 @@ def compress_file(file, output):
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
     except Exception as e:
+        print(f"An error occurred: {e}")'''
+
+def compress_file_zip(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            zipf.write(file)
+        print(f'File {file} compressed to {output}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
         print(f"An error occurred: {e}")
 
+def compress_file_bz2(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with open(file, 'rb') as f_in:
+            with bz2.open(output, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        print(f'File {file} compressed to {file}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def decompress_file_bz2(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with bz2.open(file, 'rb') as f_in:
+            with open(output, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        print(f'File {input_file} decompressed to {output_file}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def compress_file_lzma(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with open(file, 'rb') as f_in:
+            with lzma.open(output, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        print(f'File {input_file} compressed to {output_file}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def decompress_file_lzma(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with lzma.open(file, 'rb') as f_in:
+            with open(output, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        print(f'File {file} decompressed to {output}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def compress_file_tar(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with tarfile.open(output, 'w') as tar:
+            tar.add(file)
+        print(f'File {file} compressed to {output}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def decompress_file_tar(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with tarfile.open(file, 'r') as tar:
+            tar.extractall(output)
+        print(f'File {file} decompressed to {output}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def compress_file_gzip(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with open(file, 'rb') as f_in:
+            with gzip.open(output, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        print(f'File {file} compressed to {output}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def decompress_file_gzip(file, output):
+    if os.path.exists(output):
+        print(f"File '{output}' already exists. Skipping creation.")
+        return
+    try:
+        with gzip.open(file, 'rb') as f_in:
+            with open(output, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        print(f'File {file} decompressed to {output}')
+    except FileNotFoundError:
+        print(f"Error: The file '{file}' was not found.")
+    # except Exception as e:
+    #     print(f"An error occurred: {e}")
 def main():
     parser = argparse.ArgumentParser(description='Text Manipulation And File Compression ` Utility')
     subparsers = parser.add_subparsers(dest='command')
@@ -239,16 +372,18 @@ def main():
     parser_append.add_argument('file', help='File to process')
     parser_append.add_argument('append', help='Text to append')
 
-    parser_compress = subparsers.add_parser('compress', help='File compression commands')
+    parser_compress = subparsers.add_parser('compression', help='File compression commands')
     compress_subparsers = parser_compress.add_subparsers(dest='subcommand',required=True)
 
-    parser_compress_file = compress_subparsers.add_parser('file_compress', help='Compress a file into a ZIP archive')
-    parser_compress_file.add_argument('file', nargs='+' , help='File to compress')
-    parser_compress_file.add_argument('output', help='Output ZIP file name')
+    parser_compression_file = compress_subparsers.add_parser('compress', help='Compress a file into methods')
+    parser_compression_file.add_argument('file', help='File to process')
+    parser_compression_file.add_argument('output', help='Output file name')
+    parser_compression_file.add_argument('method', choices=['gzip', 'zip', 'bz2', 'lzma', 'tar'], help='Compression method')
 
-    parser_decompress = compress_subparsers.add_parser('file_decompress', help='Decompress a ZIP file')
-    parser_decompress.add_argument('file' , help='ZIP file to decompress')
-    parser_decompress.add_argument('output', help='Directory to extract  ,files to')
+    parser_compression_file = compress_subparsers.add_parser('decompress', help='Compress a file into methods')
+    parser_compression_file.add_argument('file', help='File to process')
+    parser_compression_file.add_argument('output', help='Output file name')
+    parser_compression_file.add_argument('method', choices=['gzip', 'zip', 'bz2', 'lzma', 'tar'],help='Compression method')
 
     parser_list = compress_subparsers.add_parser('list_file', help='List contents of a ZIP file')
     parser_list.add_argument('file', help='ZIP file to list contents of')
@@ -287,13 +422,31 @@ def main():
             append_string_to_file(args.file, args.append)
         else:
             parser.print_help()
-    elif args.command == 'compress':
-        if args.subcommand == 'file_compress':
-            compress_file(args.file, args.output)
-        elif args.subcommand == 'file_decompress':
-            decompress_file(args.file, args.output)
+    elif args.command == 'compression':
+        if args.subcommand == 'compress':
+            if args.method == 'gzip':
+                compress_file_gzip(args.file, args.output)
+            elif args.method == 'zip':
+                compress_file_zip(args.file, args.output)
+            elif args.method == 'bz2':
+                compress_file_bz2(args.file, args.output)
+            elif args.method == 'lzma':
+                compress_file_lzma(args.file, args.output)
+            elif args.method == 'tar':
+                compress_file_tar(args.file, args.output)
+        elif args.subcommand == 'decompress':
+            if args.method == 'gzip':
+                decompress_file_gzip(args.file, args.output)
+            elif args.method == 'tar':
+                decompress_file_tar(args.file, args.output)
+            elif args.method == 'lzma':
+                decompress_file_lzma(args.file, args.output)
+            elif args.method == 'bz2':
+                decompress_file_bz2(args.file, args.output)
+            elif args.method == 'zip':
+                decompress_file_zip(args.file, args.output)
         elif args.subcommand == 'list_file':
-            list_contents(args.file)
+            list_to_zip(args.file)
         elif args.subcommand == 'add_file':
             add_to_zip(args.file, args.append)
         else:
@@ -304,3 +457,8 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+'''ef compress_file_zip(input_file, output_file):
+    with zipfile.ZipFile(output_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        zipf.write(input_file)
+    print(f'File {input_file} compressed to {output_file}')'''
