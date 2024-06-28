@@ -458,7 +458,3 @@ if __name__ == "__main__":
     main()
 
 
-'''ef compress_file_zip(input_file, output_file):
-    with zipfile.ZipFile(output_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        zipf.write(input_file)
-    print(f'File {input_file} compressed to {output_file}')'''
