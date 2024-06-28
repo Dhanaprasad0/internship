@@ -185,12 +185,6 @@ def list_contents(file):
         print(f"An error occurred: {e}")
 
 def add_to_zip(file, append):
-    if os.path.exists(file):
-        print(f"File '{file}' already exists. Skipping creation.")
-        return
-    if os.path.exists(append):
-        print(f"File '{append}' already exists. Skipping creation.")
-        return
     try:
         with zipfile.ZipFile(file, 'a') as zipf:
             zipf.write(append, os.path.basename(append))
@@ -413,7 +407,10 @@ def main():
         elif args.subcommand == 'case':
             convert_case(args.file, args.case)
         elif args.subcommand == 'count':
-            count_word_in_file(args.file, args.word)
+            if args.word:
+                count_word_in_file(args.file, args.word)
+            else:
+                count_all_words_in_file(args.file)
         elif args.subcommand == 'reverse':
             reverse_file_content(args.file)
         elif args.subcommand == 'count_all':
