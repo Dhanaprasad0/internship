@@ -9,6 +9,9 @@ Ensure you have Python installed on your system. This script uses standard Pytho
 ## Usage
 
 The script can be run from the command line with different subcommands for text manipulation and file compression. Below are the details for each subcommand.
+#### Create a File
+```sh
+python script.py text create <file> <text>```
 
 ## Text Manipulation Commands
 
