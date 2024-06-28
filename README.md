@@ -15,6 +15,7 @@ The script can be run from the command line with different subcommands for text 
 Create a File
 
 python script.py text create <file> <text>
+
 Ex: 
 
    python main.py text create example.txt "Hello, World"
