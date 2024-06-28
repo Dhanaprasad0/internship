@@ -15,39 +15,50 @@ The script can be run from the command line with different subcommands for text 
 Create a File
 
 python script.py text create <file> <text>
-Ex: python main.py text create example.txt "Hello, World"
+Ex: 
+   python main.py text create example.txt "Hello, World"
 
 Rename a File
 
 python main.py text rename <file> <renamefile>
-Ex: python main.py text create example.txt main.txt
+Ex:
+   python main.py text create example.txt main.txt
 
 Delete a File
 
 python main.py text delete <file>
-Ex: python main.py text create main.txt
+Ex: 
+   python main.py text create main.txt
 
 Replace Text in a File
 
 python main.py text replace <file> <find> <replace>
-Ex:python main.py text replace example.txt World hi
+
+Ex:
+   python main.py text replace example.txt World hi
    "Hello, hi"
 
 Remove Text from a File
 
 python main.py text remove <file> <find>
-Ex:python main.py text remove example.txt  hi
+
+Ex:
+   python main.py text remove example.txt  hi
    "Hello, "
 
 Find Text in a File
 
 python main.py text find <file> <find>
-Ex:python main.py text find  example.txt hello
+
+Ex:
+   python main.py text find  example.txt hello
 
 Trim Whitespace from a File
 
 python main.py text trim <file>
-Ex:python main.py text trim example.txt
+
+Ex:
+   python main.py text trim example.txt
 
 Convert Case of Text in a File
 
@@ -117,7 +128,8 @@ Decompress a gzip File
 
 python main.py compression decompress <file> <output> <gzip|zip|bz2|lzma|tar>
 
-Ex: python main.py compression decompress example.txt.gz decompressed_example.txt gzip
+Ex: 
+   python main.py compression decompress example.txt.gz decompressed_example.txt gzip
 
 For additional help, use the -h or --help flag with any command or subcommand.
 
