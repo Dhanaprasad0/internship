@@ -12,7 +12,7 @@ The script can be run from the command line with different subcommands for text 
 
 ## Text Manipulation Commands
 
-_Create a File
+_ Create a File
 
  python script.py text create <file> <text>
 
