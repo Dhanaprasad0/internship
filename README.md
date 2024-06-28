@@ -1,5 +1,3 @@
-Certainly! Here's an improved and formatted version of your `README.md` file with the added `read` command:
-
 # Text Manipulation and File Compression Utility
 
 This script provides various functionalities for text manipulation and file compression. It supports creating, renaming, deleting, and manipulating text files as well as compressing and decompressing files using different methods.
