@@ -10,14 +10,13 @@ Ensure you have Python installed on your system. This script uses standard Pytho
 
 The script can be run from the command line with different subcommands for text manipulation and file compression. Below are the details for each subcommand.
 
-### Text Manipulation Commands
+## Text Manipulation Commands
 
 Create a File
 
 python script.py text create <file> <text>
 
-Ex: 
-
+Ex:
    python main.py text create example.txt "Hello, World"
 
 Rename a File
@@ -107,7 +106,7 @@ python main.py text reverse <file>
 
 Ex:python main.py text reverse example.txt
 
-   World Hi
+    World Hi
 
 Append Text to a File
 
@@ -117,7 +116,7 @@ Ex:python main.py text append example.txt Me
 
    "Hi, World Me"
 
-### File Compression Commands
+## File Compression Commands
 Compress a File
 
 python main.py compression compress <file> <output> <gzip|zip|bz2|lzma|tar>
@@ -132,7 +131,7 @@ python main.py compression decompress <file> <output> <gzip|zip|bz2|lzma|tar>
 
 Ex: Decompress a gzip File
 
-   python main.py compression decompress example.txt.gz decompressed_example.txt gzip
+    python main.py compression decompress example.txt.gz decompressed_example.txt gzip
 
 For additional help, use the -h or --help flag with any command or subcommand.
 
@@ -142,7 +141,7 @@ python main.py text --help
 
 python main.py compression --help
 
-### License
+## License
 
 This project is licensed under the MIT License.\n
 
