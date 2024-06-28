@@ -16,12 +16,14 @@ The script can be run from the command line with different subcommands for text 
 
 - Create a File
 
-```
-   sh
+```sh
    python script.py text create <file> <text>
 ```
 
-Ex:python main.py text create example.txt "Hello, World"
+Ex:
+```sh
+   python main.py text create example.txt "Hello, World"
+```
 
 - Rename a File
 
