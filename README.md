@@ -37,7 +37,7 @@ Ex:
 ```
 
 - Delete a File
-- 
+
 ```sh
    python main.py text delete <file>
 ```
@@ -48,7 +48,7 @@ Ex:
    python main.py text create main.txt
 ```
 
-Replace Text in a File
+- Replace Text in a File
 
 ```sh
    python main.py text replace <file> <find> <replace>
@@ -58,7 +58,8 @@ Ex:
 
 ```sh
    python main.py text replace example.txt World hi
-    "Hello, hi"
+
+   "Hello, hi"
 ```
 
 - Remove Text from a File
@@ -71,6 +72,7 @@ Ex:
 
 ```sh
    python main.py text remove example.txt  hi
+
    "Hello, "
 ```
 
