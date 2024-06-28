@@ -199,8 +199,3 @@ python main.py compression add_file existing.zip new_file.txt
 ## License
 
 This project is licensed under the MIT License.
-```
-
-### Explanation
-
-This version maintains a clearer structure with headings and subheadings for each command category (`Text Manipulation Commands` and `File Compression Commands`). Each command includes a brief description, usage syntax, and example command to run with the script (`main.py`). This structure improves readability and usability for users exploring your utility script.
