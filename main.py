@@ -63,6 +63,15 @@ def remove_text(file, find):
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
 
+def read_text(file):
+    try:
+        with open(file,"r") as f:
+            content = f.read()
+        return print(content)
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        return None
+
 def find_text(file, find):
     try:
         with open(file, 'r') as f:
@@ -335,6 +344,9 @@ def main():
     remove_parser.add_argument('file', help='The file to remove text in')
     remove_parser.add_argument('find', help='The text to remove')
 
+    read_parser = text_subparsers.add_parser('read',help='Read content of file')
+    read_parser.add_argument('file', help='The file to read')
+
     find_parser = text_subparsers.add_parser('find', help='Find text in a file')
     find_parser.add_argument('file', help='The file to find text in')
     find_parser.add_argument('find', help='The text to find')
@@ -392,6 +404,8 @@ def main():
             replace_text(args.file, args.find, args.replace)
         elif args.subcommand == 'remove':
             remove_text(args.file, args.find)
+        elif args.subcommand == 'read':
+            read_text(args.file)
         elif args.subcommand == 'find':
             find_text(args.file, args.find)
         elif args.subcommand == 'trim':
