@@ -52,59 +52,85 @@ Ex:python main.py text trim example.txt
 Convert Case of Text in a File
 
 python main.py text case <file> <upper|lower|swapcase>
+
 Ex:i)Convert Case of Upper
+
      python main.py text case example.txt upper
+     
      "HI,"
+     
    ii)Convert Case of Lower
+   
       python main.py text case example.txt lower
+      
       "hi,"
    iii)Convert Case of SwapCase
+   
        python main.py text case example.txt swapcase
+       
        "Hi,"
 
 Count Words in a File
 
 python main.py text count <file> [--word <word>]
+
 Ex:i)All word counts in the file
+
      python main.py text count example.txt
+     
      The word 'hi' occurs 1 times.
+     
      The word 'world' occurs 1 times.
+     
    ii)Count Words in a File
+   
      python main.py text count example.txt --word Hi
+     
      The word 'hi' occurs 1 times.
 
 Reverse the Content of a File
 
 python main.py text reverse <file>
+
 Ex:python main.py text reverse example.txt
+
    World Hi
 
 Append Text to a File
+
 python main.py text append <file> <append>
+
 Ex:python main.py text append example.txt Me
+
    "Hi, World Me"
 
 ### File Compression Commands
 Compress a File
 
 python main.py compression compress <file> <output> <gzip|zip|bz2|lzma|tar>
+
 Ex: Compress a File Using gzip
+
     python main.py compression compress example.txt example.txt.gz gzip
 
 Decompress a gzip File
 
 python main.py compression decompress <file> <output> <gzip|zip|bz2|lzma|tar>
+
 Ex: python main.py compression decompress example.txt.gz decompressed_example.txt gzip
 
 For additional help, use the -h or --help flag with any command or subcommand.
 
 python main.py --help
+
 python main.py text --help
+
 python main.py compression --help
 
 ### License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License.\n
+
 This script and `README.md` should now be ready for use. Let me know if there are any further modifications or if you need any additional features!
 
 
