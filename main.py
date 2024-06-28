@@ -9,21 +9,21 @@ import bz2
 import tarfile
 import gzip
 
-def create_file(file,text):
+def create_file(file, text):
     if os.path.exists(file):
         print(f"File '{file}' already exists. Skipping creation.")
         return
     try:
-        with open(file, 'w') as f:
+        with open(file, 'w+') as f:
             f.write(text)
-        with open(file, 'r') as f:
-            content=f.read()
+            f.seek(0)
+            content = f.read()
             print(content)
         print("File " + file + " created successfully.")
     except FileNotFoundError:
-        print(f"Error: could not create file" + file)
+        print(f"Error: could not create file " + file)
 
-def rename_file(file,renamefile):
+def rename_file(file, renamefile):
     try:
         os.rename(file, renamefile)
         print("File " + file + " renamed to " + renamefile + " successfully.")
@@ -34,29 +34,31 @@ def delete_file(file):
     try:
         os.remove(file)
         print("File " + file + " deleted successfully.")
-    except :
+    except:
         print(f"Error: could not delete file " + file)
 
 def replace_text(file, find, replace):
     try:
-        with open(file, 'r') as f:
+        with open(file, 'r+') as f:
             content = f.read()
-        content = content.replace(find, replace)
-        print(content)
-        with open(file, 'w') as f:
+            content = content.replace(find, replace)
+            f.seek(0)
             f.write(content)
+            f.truncate()
+            print(content)
         print(f"Replaced '{find}' with '{replace}' in '{file}'.")
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
 
 def remove_text(file, find):
     try:
-        with open(file, 'r') as f:
+        with open(file, 'r+') as f:
             content = f.read()
-        content = content.replace(find, '')
-        print(content)
-        with open(file, 'w') as f:
+            content = content.replace(find, '')
+            f.seek(0)
             f.write(content)
+            f.truncate()
+            print(content)
         print(f"Removed '{find}' from '{file}'.")
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
@@ -66,37 +68,42 @@ def find_text(file, find):
         with open(file, 'r') as f:
             content = f.read()
             print(content)
-        split = ''.join(content.split())
-        index = split.find(find)
-        if index != -1:
-            print(f"'{find}' found at index {index}.")
-        else:
-            print(f"'{find}' not found.")
+            split = ''.join(content.split())
+            index = split.find(find)
+            if index != -1:
+                print(f"'{find}' found at index {index}.")
+            else:
+                print(f"'{find}' not found.")
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
 
 def trim_file(file):
     try:
-        with open(file, 'r') as f:
+        with open(file, 'r+') as f:
             content = f.read()
-        trimmed_content = content.strip()
-        print(f"Trimmed '{file}' is successfully.")
-        print(f"Trimmed content:\n'{trimmed_content}'")
-        # return trimmed_content
+            trimmed_content = content.strip()
+            f.seek(0)
+            f.write(trimmed_content)
+            f.truncate()
+            print(f"Trimmed '{file}' successfully.")
+            print(f"Trimmed content:\n'{trimmed_content}'")
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
 
 def convert_case(file, case):
     try:
-        with open(file, 'r') as f:
+        with open(file, 'r+') as f:
             content = f.read()
-        if case == 'upper':
-            content = content.upper()
-        elif case == 'lower':
-            content = content.lower()
-        elif case == 'swapcase':
-            content = content.swapcase()
-        print(content)
+            if case == 'upper':
+                content = content.upper()
+            elif case == 'lower':
+                content = content.lower()
+            elif case == 'swapcase':
+                content = content.swapcase()
+            f.seek(0)
+            f.write(content)
+            f.truncate()
+            print(content)
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
 
@@ -115,7 +122,7 @@ def reverse_file_content(file):
             content = f.readlines()
             print(content)
         for content in content:
-            reversed_texts=" ".join(reversed(content.split()))
+            reversed_texts = " ".join(reversed(content.split()))
             print(reversed_texts)
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
@@ -134,16 +141,14 @@ def count_all_words_in_file(file):
 
 def append_string_to_file(file, append):
     try:
-        with open(file, 'a') as f:
-            f.write('\n'+ append)
-        with open(file, 'r') as f:
-            content=f.read()
+        with open(file, 'a+') as f:
+            f.write('\n' + append)
+            f.seek(0)
+            content = f.read()
             print(content)
         print(f"\nSuccessfully appended '{append}' to the file '{file}'.")
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
-
-
 
 def decompress_file_zip(file, output):
     if os.path.exists(output):
@@ -186,21 +191,6 @@ def add_to_zip(file, append):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-'''def compress_file_zip(file, output):
-    if os.path.exists(output):
-        print(f"File '{output}' already exists. Skipping creation.")
-        return
-    try:
-        with zipfile.ZipFile(output, 'w') as zipf:
-            for file in file:
-                if os.path.isfile(file):
-                    zipf.write(file, os.path.basename(file))
-        print(f"File '{file}' compressed into '{output}'")
-    except FileNotFoundError:
-        print(f"Error: The file '{file}' was not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")'''
-
 def compress_file_zip(file, output):
     if os.path.exists(output):
         print(f"File '{output}' already exists. Skipping creation.")
@@ -219,9 +209,8 @@ def compress_file_bz2(file, output):
         print(f"File '{output}' already exists. Skipping creation.")
         return
     try:
-        with open(file, 'rb') as f_in:
-            with bz2.open(output, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
+        with open(file, 'rb') as f_in, bz2.open(output, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
         print(f'File {file} compressed to {file}')
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
@@ -233,9 +222,8 @@ def decompress_file_bz2(file, output):
         print(f"File '{output}' already exists. Skipping creation.")
         return
     try:
-        with bz2.open(file, 'rb') as f_in:
-            with open(output, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
+        with bz2.open(file, 'rb') as f_in, open(output, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
         print(f'File {input_file} decompressed to {output_file}')
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
@@ -247,9 +235,8 @@ def compress_file_lzma(file, output):
         print(f"File '{output}' already exists. Skipping creation.")
         return
     try:
-        with open(file, 'rb') as f_in:
-            with lzma.open(output, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
+        with open(file, 'rb') as f_in, lzma.open(output, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
         print(f'File {input_file} compressed to {output_file}')
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
@@ -261,10 +248,9 @@ def decompress_file_lzma(file, output):
         print(f"File '{output}' already exists. Skipping creation.")
         return
     try:
-        with lzma.open(file, 'rb') as f_in:
-            with open(output, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-        print(f'File {file} decompressed to {output}')
+        with lzma.open(file, 'rb') as f_in, open(output, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+        print(f'File {input_file} decompressed to {output_file}')
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
     except Exception as e:
@@ -276,8 +262,8 @@ def compress_file_tar(file, output):
         return
     try:
         with tarfile.open(output, 'w') as tar:
-            tar.add(file)
-        print(f'File {file} compressed to {output}')
+            tar.add(file, arcname=os.path.basename(file))
+        print(f'File {input_file} compressed to {output_file}')
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
     except Exception as e:
@@ -289,8 +275,8 @@ def decompress_file_tar(file, output):
         return
     try:
         with tarfile.open(file, 'r') as tar:
-            tar.extractall(output)
-        print(f'File {file} decompressed to {output}')
+            tar.extractall(path=output)
+        print(f'File {input_file} decompressed to {output_file}')
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
     except Exception as e:
@@ -301,10 +287,9 @@ def compress_file_gzip(file, output):
         print(f"File '{output}' already exists. Skipping creation.")
         return
     try:
-        with open(file, 'rb') as f_in:
-            with gzip.open(output, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-        print(f'File {file} compressed to {output}')
+        with open(file, 'rb') as f_in, gzip.open(output, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+        print(f'File {input_file} compressed to {output_file}')
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
     except Exception as e:
@@ -315,85 +300,87 @@ def decompress_file_gzip(file, output):
         print(f"File '{output}' already exists. Skipping creation.")
         return
     try:
-        with gzip.open(file, 'rb') as f_in:
-            with open(output, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-        print(f'File {file} decompressed to {output}')
+        with gzip.open(file, 'rb') as f_in, open(output, 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
+        print(f'File {input_file} decompressed to {output_file}')
     except FileNotFoundError:
         print(f"Error: The file '{file}' was not found.")
-    # except Exception as e:
-    #     print(f"An error occurred: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def main():
-    parser = argparse.ArgumentParser(description='Text Manipulation And File Compression ` Utility')
+    parser = argparse.ArgumentParser(description='Text Manipulation and Compression Utility.')
     subparsers = parser.add_subparsers(dest='command')
 
-    parser_text = subparsers.add_parser('text', help='Text manipulation commands')
-    text_subparsers = parser_text.add_subparsers(dest='subcommand')
+    text_parser = subparsers.add_parser('text', help='Text manipulation commands')
+    text_subparsers = text_parser.add_subparsers(dest='subcommand')
 
-    parser_create = text_subparsers.add_parser('create', help='Create the file')
-    parser_create.add_argument('file', help='File to process')
-    parser_create.add_argument('text', help='Create of new file')
+    create_parser = text_subparsers.add_parser('create', help='Create a file with text')
+    create_parser.add_argument('file', help='The file to create')
+    create_parser.add_argument('text', help='The text to write to the file')
 
-    parser_rename = text_subparsers.add_parser('rename', help='Rename the file')
-    parser_rename.add_argument('file', help='File to process')
-    parser_rename.add_argument('renamefile', help='file name to rename file')
+    rename_parser = text_subparsers.add_parser('rename', help='Rename a file')
+    rename_parser.add_argument('file', help='The file to rename')
+    rename_parser.add_argument('renamefile', help='The new name for the file')
 
-    parser_delete = text_subparsers.add_parser('delete', help='Delete the file')
-    parser_delete.add_argument('file', help='File to process')
+    delete_parser = text_subparsers.add_parser('delete', help='Delete a file')
+    delete_parser.add_argument('file', help='The file to delete')
 
-    parser_replace = text_subparsers.add_parser('replace', help='Find and replace text')
-    parser_replace.add_argument('file', help='File to process')
-    parser_replace.add_argument('find', help='Text to find')
-    parser_replace.add_argument('replace', help='Text to replace with')
+    replace_parser = text_subparsers.add_parser('replace', help='Replace text in a file')
+    replace_parser.add_argument('file', help='The file to replace text in')
+    replace_parser.add_argument('find', help='The text to find')
+    replace_parser.add_argument('replace', help='The text to replace with')
 
-    parser_remove = text_subparsers.add_parser('remove', help='Find and remove text')
-    parser_remove.add_argument('file', help='File to process')
-    parser_remove.add_argument('find', help='Text to find')
+    remove_parser = text_subparsers.add_parser('remove', help='Remove text in a file')
+    remove_parser.add_argument('file', help='The file to remove text in')
+    remove_parser.add_argument('find', help='The text to remove')
 
-    parser_find = text_subparsers.add_parser('find', help='Find the text')
-    parser_find.add_argument('file', help='File to process')
-    parser_find.add_argument('find', help='Text to find')
+    find_parser = text_subparsers.add_parser('find', help='Find text in a file')
+    find_parser.add_argument('file', help='The file to find text in')
+    find_parser.add_argument('find', help='The text to find')
 
-    parser_trim = text_subparsers.add_parser('trim', help='Trim  the file content')
-    parser_trim.add_argument('file', help='File to process')
+    trim_parser = text_subparsers.add_parser('trim', help='Trim file content')
+    trim_parser.add_argument('file', help='The file to trim')
 
-    parser_case = text_subparsers.add_parser('case', help='Convert text case')
-    parser_case.add_argument('file', help='File to process')
-    parser_case.add_argument('case', choices=['upper', 'lower', 'swapcase' ], help='Case to convert to')
+    case_parser = text_subparsers.add_parser('case', help='Convert text case in a file')
+    case_parser.add_argument('file', help='The file to convert text case in')
+    case_parser.add_argument('case', choices=['upper', 'lower', 'swapcase'], help='The case conversion to apply')
 
-    parser_count = text_subparsers.add_parser('count', help='Count occurrences of a word')
-    parser_count.add_argument('file', help='File to process')
-    parser_count.add_argument('--word', help='Word to count')
+    count_parser = text_subparsers.add_parser('count', help='Count word occurrences in a file')
+    count_parser.add_argument('file', help='The file to count words in')
+    count_parser.add_argument('--word', help='The specific word to count')
 
-    parser_reverse = text_subparsers.add_parser('reverse', help='Reverse occurrences of a word')
-    parser_reverse.add_argument('file', help='File to process')
+    reverse_parser = text_subparsers.add_parser('reverse', help='Reverse file content')
+    reverse_parser.add_argument('file', help='The file to reverse content in')
 
-    parser_append = text_subparsers.add_parser('append', help='append to the file')
-    parser_append.add_argument('file', help='File to process')
-    parser_append.add_argument('append', help='Text to append')
+    count_all_parser = text_subparsers.add_parser('count_all', help='Count all words in a file')
+    count_all_parser.add_argument('file', help='The file to count all words in')
 
-    parser_compress = subparsers.add_parser('compression', help='File compression commands')
-    compress_subparsers = parser_compress.add_subparsers(dest='subcommand',required=True)
+    append_parser = text_subparsers.add_parser('append', help='Append string to file')
+    append_parser.add_argument('file', help='The file to append string to')
+    append_parser.add_argument('append', help='The string to append')
 
-    parser_compression_file = compress_subparsers.add_parser('compress', help='Compress a file into methods')
-    parser_compression_file.add_argument('file', help='File to process')
-    parser_compression_file.add_argument('output', help='Output file name')
-    parser_compression_file.add_argument('method', choices=['gzip', 'zip', 'bz2', 'lzma', 'tar'], help='Compression method')
+    compress_parser = subparsers.add_parser('compression', help='File compression commands')
+    compress_subparsers = compress_parser.add_subparsers(dest='subcommand')
 
-    parser_compression_file = compress_subparsers.add_parser('decompress', help='Compress a file into methods')
-    parser_compression_file.add_argument('file', help='File to process')
-    parser_compression_file.add_argument('output', help='Output file name')
-    parser_compression_file.add_argument('method', choices=['gzip', 'zip', 'bz2', 'lzma', 'tar'],help='Compression method')
+    compress_file_parser = compress_subparsers.add_parser('compress', help='Compress a file')
+    compress_file_parser.add_argument('file', help='The file to compress')
+    compress_file_parser.add_argument('output', help='The output compressed file')
+    compress_file_parser.add_argument('method', choices=['zip', 'bz2', 'lzma', 'tar', 'gzip'], help='The compression method to use')
 
-    parser_list = compress_subparsers.add_parser('list_file', help='List contents of a ZIP file')
-    parser_list.add_argument('file', help='ZIP file to list contents of')
+    decompress_file_parser = compress_subparsers.add_parser('decompress', help='Decompress a file')
+    decompress_file_parser.add_argument('file', help='The file to decompress')
+    decompress_file_parser.add_argument('output', help='The output directory or file')
+    decompress_file_parser.add_argument('method', choices=['zip', 'bz2', 'lzma', 'tar', 'gzip'], help='The decompression method to use')
 
-    parser_add = compress_subparsers.add_parser('add_file', help='Add a file to an existing ZIP archive')
-    parser_add.add_argument('file', help='ZIP file to add to')
-    parser_add.add_argument('append', help='File to add to the ZIP archive')
+    list_parser = compress_subparsers.add_parser('list_file', help='List contents of a ZIP file')
+    list_parser.add_argument('file', help='The ZIP file to list contents of')
+
+    add_file_parser = compress_subparsers.add_parser('add_file', help='Add a file to an existing ZIP file')
+    add_file_parser.add_argument('file', help='The existing ZIP file')
+    add_file_parser.add_argument('append', help='The file to add to the ZIP')
 
     args = parser.parse_args()
-
     if args.command == 'text':
         if args.subcommand == 'create':
             create_file(args.file, args.text)
@@ -412,21 +399,16 @@ def main():
         elif args.subcommand == 'case':
             convert_case(args.file, args.case)
         elif args.subcommand == 'count':
-            if args.word:
-                count_word_in_file(args.file, args.word)
-            else:
-                count_all_words_in_file(args.file)
+            count_word_in_file(args.file, args.word)
         elif args.subcommand == 'reverse':
             reverse_file_content(args.file)
+        elif args.subcommand == 'count_all':
+            count_all_words_in_file(args.file)
         elif args.subcommand == 'append':
             append_string_to_file(args.file, args.append)
-        else:
-            parser.print_help()
     elif args.command == 'compression':
         if args.subcommand == 'compress':
-            if args.method == 'gzip':
-                compress_file_gzip(args.file, args.output)
-            elif args.method == 'zip':
+            if args.method == 'zip':
                 compress_file_zip(args.file, args.output)
             elif args.method == 'bz2':
                 compress_file_bz2(args.file, args.output)
@@ -434,27 +416,23 @@ def main():
                 compress_file_lzma(args.file, args.output)
             elif args.method == 'tar':
                 compress_file_tar(args.file, args.output)
+            elif args.method == 'gzip':
+                compress_file_gzip(args.file, args.output)
         elif args.subcommand == 'decompress':
-            if args.method == 'gzip':
-                decompress_file_gzip(args.file, args.output)
-            elif args.method == 'tar':
-                decompress_file_tar(args.file, args.output)
-            elif args.method == 'lzma':
-                decompress_file_lzma(args.file, args.output)
+            if args.method == 'zip':
+                decompress_file_zip(args.file, args.output)
             elif args.method == 'bz2':
                 decompress_file_bz2(args.file, args.output)
-            elif args.method == 'zip':
-                decompress_file_zip(args.file, args.output)
+            elif args.method == 'lzma':
+                decompress_file_lzma(args.file, args.output)
+            elif args.method == 'tar':
+                decompress_file_tar(args.file, args.output)
+            elif args.method == 'gzip':
+                decompress_file_gzip(args.file, args.output)
         elif args.subcommand == 'list_file':
-            list_to_zip(args.file)
+            list_contents(args.file)
         elif args.subcommand == 'add_file':
             add_to_zip(args.file, args.append)
-        else:
-            parser.print_help()
-    else:
-        parser.print_help()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
-
-
