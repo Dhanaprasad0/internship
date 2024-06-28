@@ -16,7 +16,8 @@ The script can be run from the command line with different subcommands for text 
 
 - Create a File
 
-```sh
+```
+   sh
    python script.py text create <file> <text>
 ```
 
