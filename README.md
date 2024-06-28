@@ -114,7 +114,7 @@ python main.py text append <file> <append>
 
 Ex:python main.py text append example.txt Me
 
-   "Hi, World Me"
+    "Hi, World Me"
 
 ## File Compression Commands
 Compress a File
