@@ -1,6 +1,5 @@
 Certainly! Here's an improved and formatted version of your `README.md` file with the added `read` command:
 
-```markdown
 # Text Manipulation and File Compression Utility
 
 This script provides various functionalities for text manipulation and file compression. It supports creating, renaming, deleting, and manipulating text files as well as compressing and decompressing files using different methods.
@@ -13,7 +12,7 @@ Ensure you have Python installed on your system. This script uses standard Pytho
 
 The script can be run from the command line with different subcommands for text manipulation and file compression. Below are the details for each subcommand.
 
----
+
 
 ## Text Manipulation Commands
 
