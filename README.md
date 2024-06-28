@@ -130,7 +130,8 @@ Decompress a gzip File
 
 python main.py compression decompress <file> <output> <gzip|zip|bz2|lzma|tar>
 
-Ex: 
+Ex: Decompress a gzip File
+
    python main.py compression decompress example.txt.gz decompressed_example.txt gzip
 
 For additional help, use the -h or --help flag with any command or subcommand.
